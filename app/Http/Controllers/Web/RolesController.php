@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class RolesController extends Controller
 {
-    public function index(Request $request)iesoluciones
-
+    public function index(Request $request)
     {
         $orderBy = $request->input('sortBy', 'roles.id');
         $order = $request->input('order', 'desc');
