@@ -51,27 +51,6 @@ class UsersController extends Controller
 
         return response()->success($data);
 
-
-//        $queryBuilder->select($campos)
-//            ->join('role_users', 'role_users.user_id', '=', 'users.id')
-//            ->join('roles', 'roles.id', '=', 'role_users.role_id')
-//            ->orderBy($orderBy, $order);
-//
-//        if ($query = $request->get('query', false)) {
-//            $queryBuilder->where(function ($q) use ($query) {
-//                $q->where('nombre', 'like', '%' . $query . '%');
-//            });
-//        }
-//
-//
-//        if ($perPage = $request->input('perPage', false)) {
-//            $data = $queryBuilder->paginate($perPage);
-//        } else {
-//            $data = $queryBuilder->get();
-//        }
-//
-//
-//        return response()->success(['data' => $data]);
     }
 
     public function store(UsersRequest $request)
