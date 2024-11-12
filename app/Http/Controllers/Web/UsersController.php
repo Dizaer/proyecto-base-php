@@ -59,7 +59,6 @@ class UsersController extends Controller
 
         DB::beginTransaction();
         try {
-
             $credentials = [
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
@@ -77,11 +76,9 @@ class UsersController extends Controller
             ]);
 
             $role = Role::query()->find($data['role_id']);
+            $role = Sentinel::findRoleByName($role->name);
 
-            RoleUser::query()->create([
-                'user_id' => $user->id,
-                'role_id' => $role->id
-            ]);
+            $role->users()->attach($user);
 
 
             DB::commit();
