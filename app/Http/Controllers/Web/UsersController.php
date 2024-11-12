@@ -23,35 +23,34 @@ class UsersController extends Controller
         $campos = [
             'users.id as id',
             DB::raw("CONCAT_WS(' ', nombre, apellido_paterno, apellido_materno) as nombre"),
-            'telefono',
-            'email',
-            'roles.name as role',
-            'users.deleted_at'
+            'telefono as numero_telefonico',
+            'email as correo_electronico',
+            'roles.name as rol',
+            'users.deleted_at as fue_eliminado',
         ];
 
         $queryBuilder = $deleted ? User::onlyTrashed() : User::withoutTrashed();
 
-
-        $queryBuilder->select($campos)
-            ->join('role_users', 'role_users.user_id', '=', 'users.id')
-            ->join('roles', 'roles.id', '=', 'role_users.role_id')
+        $queryBuilder = $queryBuilder->select($campos)
+            ->join('role_users', 'users.id', '=', 'role_users.user_id')
+            ->join('roles', 'role_users.role_id', '=', 'roles.id')
             ->orderBy($orderBy, $order);
 
-        if ($query = $request->get('query', false)) {
-            $queryBuilder->where(function ($q) use ($query) {
-                $q->where('nombre', 'like', '%' . $query . '%');
+        if ($query = $request->input('query', false)){
+            $queryBuilder->where(function ($q) use ($query){
+               $q->where('users.nombre', 'like', '%'.$query.'%')
+                   ->orWhere('email', 'like', '%'.$query.'%');
             });
         }
 
-
-        if ($perPage = $request->input('perPage', false)) {
+        if ($perPage = $request->input('perPage', false)){
             $data = $queryBuilder->paginate($perPage);
-        } else {
+        }else{
             $data = $queryBuilder->get();
         }
 
+        return response()->success($data);
 
-        return response()->success(['data' => $data]);
     }
 
     public function store(UsersRequest $request)
