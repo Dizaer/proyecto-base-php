@@ -135,10 +135,11 @@ class UsersController extends Controller
         $usuario = User::withTrashed()->findOrfail($id);
         if ($usuario->deleted_at) {
             $usuario->restore();
+            return response()->success(['result' => 'El usuario se ha restaurado.']);
         } else {
             $usuario->delete();
+            return response()->success(['result' => 'El usuario se ha eliminado.']);
         }
-        return response()->success(['result' => 'ok']);
     }
 
     public function roles()
